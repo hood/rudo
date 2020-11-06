@@ -20,7 +20,7 @@ fn main() {
         "add" => Command::ADD,
         "mark" => Command::MARK,
         "delete" => Command::DELETE,
-        _ => panic!("Must provide a valid command."),
+        _ => panic!("Must provide a valid command. Valid commands are \"get\", \"add\", \"mark\", \"delete\"."),
     };
 
     // Define the argument and initialize it

@@ -25,8 +25,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-todo-cli"
-version = "0.1.0"
+name = "rudo"
+version = "0.0.1"
 dependencies = [
  "serde",
  "serde_json",
