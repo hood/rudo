@@ -1,21 +1,15 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Result;
-
-pub enum Command {
-    GET,
-    ADD,
-    MARK,
-    DELETE,
-}
+extern crate dirs;
 
 fn check_file() -> bool {
-    return std::fs::metadata("./store.json").is_ok();
+    return std::fs::metadata(format!("{homedir}/rudo/store.json", homedir = dirs::home_dir().unwrap().to_string_lossy())).is_ok();
 }
 
 fn read_file() -> Result<TodoList> {
     let file = std::fs::OpenOptions::new()
         .read(true)
-        .open("./store.json")
+        .open(format!("{homedir}/rudo/store.json", homedir = dirs::home_dir().unwrap().to_string_lossy()))
         .unwrap();
 
     let result: TodoList = serde_json::from_reader(&file)?;
@@ -55,12 +49,22 @@ impl TodoList {
     // an item in the todoolist
     pub fn mark_item(&mut self, index: String) {
         let parsed_index: usize = index.parse::<usize>().unwrap();
+
+        if parsed_index == 0 || parsed_index > self.list.len().to_string().parse::<usize>().unwrap() {
+            panic!("Please provide a valid todo item index.")
+        }
+
         self.list[parsed_index - 1].completed = !self.list[parsed_index - 1].completed;
     }
 
     // Remove an item from the todolist
     pub fn remove_item(&mut self, index: String) {
         let parsed_index: usize = index.parse::<usize>().unwrap();
+
+        if parsed_index == 0 || parsed_index > self.list.len().to_string().parse::<usize>().unwrap() {
+            panic!("Please provide a valid todo item index.")
+        }
+
         &self.list.remove(parsed_index);
     }
 
@@ -70,7 +74,7 @@ impl TodoList {
         let file = std::fs::OpenOptions::new()
             .create(true)
             .write(true)
-            .open("./store.json")
+            .open(format!("{homedir}/rudo/store.json", homedir = dirs::home_dir().unwrap().to_string_lossy()))
             .unwrap();
 
         // Truncate the store file
