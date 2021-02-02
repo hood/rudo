@@ -1,5 +1,5 @@
 mod lib;
-use lib::{TodoList};
+use lib::TodoList;
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
@@ -15,7 +15,10 @@ struct Opt {
     get: Option<i32>,
 
     #[structopt(short, long)]
-    delete: Option<i32>
+    delete: Option<i32>,
+
+    #[structopt(short, long)]
+    list: bool
 }
 
 fn main() {
@@ -40,6 +43,8 @@ fn main() {
         todo_list.print();
     }
     else if opt.get != None {
+        todo_list.print_item(opt.get.unwrap().to_string());
+    } else  if opt.list != false {
         todo_list.print();
     }
 

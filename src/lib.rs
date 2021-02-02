@@ -33,8 +33,7 @@ impl TodoList {
     // the list with its items
     pub fn init(&mut self) {
         if check_file() {
-            let todo_list: TodoList;
-            todo_list = read_file().unwrap();
+            let todo_list: TodoList = read_file().unwrap();
             self.list = todo_list.list;
         }
     }
@@ -66,6 +65,27 @@ impl TodoList {
         }
 
         &self.list.remove(parsed_index);
+    }
+
+    // Print an item
+    pub fn print_item(&mut self, index: String) {
+        let parsed_index: usize = index.parse::<usize>().unwrap();
+
+        if parsed_index == 0 || parsed_index > self.list.len().to_string().parse::<usize>().unwrap() {
+            panic!("Please provide a valid todo item index.")
+        }
+
+        let todo = &self.list[parsed_index - 1];
+
+        let state: String;
+
+        if todo.completed == true {
+            state = "x".to_string();
+        } else {
+            state = " ".to_string();
+        };
+
+        println!("{}. [{}] - {:#?}", index, state, todo.name); 
     }
 
     // Dump the todolist to the store file
