@@ -85,7 +85,7 @@ impl TodoList {
             state = " ".to_string();
         };
 
-        println!("{}. [{}] - {:#?}", index, state, todo.name); 
+        println!("{}. [{}] {:#?}", index, state, todo.name); 
     }
 
     // Dump the todolist to the store file
@@ -122,6 +122,27 @@ impl TodoList {
 
             println!("{}. [{}] - {:#?}", i + 1, state, todo.name)
         }
+
+        self.print_completion();
+    }
+
+    // Print the completion status
+    pub fn print_completion(&self) {
+        let items: u32 = self.list.len() as u32;
+        let mut completed_items: u32 = 0;
+
+        for (_, todo) in self.list.iter().enumerate() {
+            if todo.completed == true {
+                completed_items += 1;
+            }
+        }
+
+        let completion_status: f32 = (completed_items as f32 / items as f32) * 100f32;
+
+        println!("");
+        println!("{} of {} tasks completed", completed_items, items);
+
+        println!("Completion status: {}%", completion_status as u32);
     }
 }
 
