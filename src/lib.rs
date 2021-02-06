@@ -64,7 +64,7 @@ impl TodoList {
             panic!("Please provide a valid todo item index.")
         }
 
-        &self.list.remove(parsed_index);
+        &self.list.remove(parsed_index - 1);
     }
 
     // Print an item
