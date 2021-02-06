@@ -1,6 +1,6 @@
 [package]
 name = "rudo"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["hood <hood@null.net>"]
 edition = "2018"
 

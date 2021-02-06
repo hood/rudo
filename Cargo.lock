@@ -227,7 +227,7 @@ dependencies = [
 
 [[package]]
 name = "rudo"
-version = "0.0.1"
+version = "0.0.3"
 dependencies = [
  "dirs",
  "serde",
