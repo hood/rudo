@@ -12,13 +12,16 @@ struct Opt {
     mark: Option<i32>,
 
     #[structopt(short, long)]
-    get: Option<i32>,
+    read: Option<i32>,
 
     #[structopt(short, long)]
     delete: Option<i32>,
 
     #[structopt(short, long)]
-    list: bool
+    list: bool,
+
+    #[structopt(short, long)]
+    global: bool
 }
 
 fn main() {
@@ -26,12 +29,13 @@ fn main() {
     // initialize it
     let mut todo_list: TodoList;
     todo_list = TodoList::create();
-    todo_list.init();
 
     let opt = Opt::from_args();
 
+    todo_list.init(opt.global);
+
     if opt.add != None {
-        todo_list.add_item(opt.add.unwrap());
+        todo_list.add_item(opt.add.to_owned());
         todo_list.print();
     }
     else if opt.mark != None {
@@ -42,12 +46,15 @@ fn main() {
         todo_list.remove_item(opt.delete.unwrap().to_string());
         todo_list.print();
     }
-    else if opt.get != None {
-        todo_list.print_item(opt.get.unwrap().to_string());
+    else if opt.read != None {
+        todo_list.print_item(opt.read.unwrap().to_string());
     } else  if opt.list != false {
         todo_list.print();
     }
 
     // Save the list before exiting
-    todo_list.save().unwrap();
+    // (only on list-modifying actions)
+    if opt.add != None || opt.mark != None || opt.delete != None {
+        todo_list.save(opt.global).unwrap();
+    }
 }

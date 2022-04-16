@@ -1,15 +1,20 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Result;
+use std::fs;
 extern crate dirs;
 
-fn check_file() -> bool {
-    return std::fs::metadata(format!("{homedir}/rudo/store.json", homedir = dirs::home_dir().unwrap().to_string_lossy())).is_ok();
+fn check_file(global: bool) -> bool {
+    let base_path = if global { dirs::home_dir().unwrap().to_string_lossy().to_string() } else { std::env::current_dir().unwrap().to_str().unwrap().to_string() };
+
+    return std::fs::metadata(format!("{base_path}/rudo/store.json", base_path = base_path)).is_ok();
 }
 
-fn read_file() -> Result<TodoList> {
+fn read_file(global: bool) -> Result<TodoList> {
+    let base_path = if global { dirs::home_dir().unwrap().to_string_lossy().to_string() } else { std::env::current_dir().unwrap().to_str().unwrap().to_string() };
+
     let file = std::fs::OpenOptions::new()
         .read(true)
-        .open(format!("{homedir}/rudo/store.json", homedir = dirs::home_dir().unwrap().to_string_lossy()))
+        .open(format!("{base_path}/rudo/store.json", base_path = base_path))
         .unwrap();
 
     let result: TodoList = serde_json::from_reader(&file)?;
@@ -31,16 +36,16 @@ impl TodoList {
     // Check for the existence of a
     // store file, then initialize
     // the list with its items
-    pub fn init(&mut self) {
-        if check_file() {
-            let todo_list: TodoList = read_file().unwrap();
+    pub fn init(&mut self, global: bool) {
+        if check_file(global) {
+            let todo_list: TodoList = read_file(global).unwrap();
             self.list = todo_list.list;
         }
     }
 
     // Add an item to the todolist
-    pub fn add_item(&mut self, name: String) {
-        let item: TodoItem = TodoItem::create(name);
+    pub fn add_item(&mut self, name: Option<String>) {
+        let item: TodoItem = TodoItem::create(name.unwrap());
         self.list.push(item);
     }
 
@@ -89,13 +94,17 @@ impl TodoList {
     }
 
     // Dump the todolist to the store file
-    pub fn save(&self) -> std::io::Result<()> {
+    pub fn save(&self, global: bool) -> std::io::Result<()> {
+        let base_path = if global { dirs::home_dir().unwrap().to_string_lossy().to_string() } else { std::env::current_dir().unwrap().to_str().unwrap().to_string() };
+
+        fs::create_dir_all(format!("{base_path}/rudo/", base_path = base_path )).expect("Couldn't create store file.");
+
         // Open the log file
         let file = std::fs::OpenOptions::new()
             .create(true)
             .write(true)
-            .open(format!("{homedir}/rudo/store.json", homedir = dirs::home_dir().unwrap().to_string_lossy()))
-            .unwrap();
+            .open(format!("{base_path}/rudo/store.json", base_path = base_path))
+            .expect("Couldn't open the store file.");
 
         // Truncate the store file
         file.set_len(0).unwrap();
@@ -120,7 +129,7 @@ impl TodoList {
                 state = " ".to_string();
             };
 
-            println!("{}. [{}] - {:#?}", i + 1, state, todo.name)
+            println!("{}. [{}] {:#?}", i + 1, state, todo.name)
         }
 
         self.print_completion();
