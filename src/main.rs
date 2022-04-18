@@ -18,6 +18,9 @@ struct Opt {
     delete: Option<i32>,
 
     #[structopt(short, long)]
+    clear: bool,
+
+    #[structopt(short, long)]
     list: bool,
 
     #[structopt(short, long)]
@@ -40,6 +43,9 @@ fn main() {
     } else if let Some(value) = option.delete {
         todo_list.remove_item(value.to_string());
         todo_list.print();
+    } else if option.clear {
+        todo_list.clear();
+        todo_list.print();
     } else if let Some(value) = option.read {
         todo_list.print_item(value.to_string());
     } else if option.list {
@@ -47,7 +53,7 @@ fn main() {
     }
 
     // Save the list before exiting (only on list-modifying actions).
-    if option.add != None || option.mark != None || option.delete != None {
+    if option.add != None || option.mark != None || option.delete != None || option.clear {
         todo_list.save(option.global).unwrap();
     }
 }

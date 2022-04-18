@@ -98,6 +98,12 @@ impl TodoList {
         self.list.remove(parsed_index - 1);
     }
 
+    pub fn clear(&mut self) {
+        self.list.clear();
+
+        println!("List cleared.");
+    }
+
     // Print an item
     pub fn print_item(&mut self, index: String) {
         let parsed_index: usize = index.parse::<usize>().unwrap();
@@ -149,8 +155,6 @@ impl TodoList {
 
     // Print the elments of the todolist
     pub fn print(&self) {
-        if self.list.is_empty() { return }
-
         for (i, todo) in self.list.iter().enumerate() {
             let state: &str = if todo.completed { "x" } else { " " };
 
