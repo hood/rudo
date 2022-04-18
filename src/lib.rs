@@ -104,6 +104,18 @@ impl TodoList {
         println!("List cleared.");
     }
 
+    pub fn clear_done(&mut self) {
+        let mut new_list: Vec<TodoItem> = vec![];
+
+        for item in self.list.iter() {
+            if !item.completed {
+                new_list.push(TodoItem::create(item.name.to_string())) // <- I cannot figure out how to make .filter() work here!
+            }
+        }
+
+        self.list = new_list;
+    }
+
     // Print an item
     pub fn print_item(&mut self, index: String) {
         let parsed_index: usize = index.parse::<usize>().unwrap();
