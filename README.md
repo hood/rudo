@@ -30,3 +30,11 @@ rudo -m 1
 rudo -d 1
 ```
 (Where `1` is the task's index)
+
+#### Global tasks
+Rudo supports the `-g` (or `--global`) flag to handle global flags, which are stored inside the `~/rudo/store.json` folder.
+
+Example:
+```
+rudo -ag "My global task"
+```
