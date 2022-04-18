@@ -21,7 +21,7 @@ struct Opt {
     list: bool,
 
     #[structopt(short, long)]
-    global: bool
+    global: bool,
 }
 
 fn main() {
@@ -30,31 +30,28 @@ fn main() {
     let mut todo_list: TodoList;
     todo_list = TodoList::create();
 
-    let opt = Opt::from_args();
+    let option = Opt::from_args();
 
-    todo_list.init(opt.global);
+    todo_list.init(option.global);
 
-    if opt.add != None {
-        todo_list.add_item(opt.add.to_owned());
+    if option.add != None {
+        todo_list.add_item(option.add.to_owned());
         todo_list.print();
-    }
-    else if opt.mark != None {
-        todo_list.mark_item(opt.mark.unwrap().to_string());
+    } else if let Some(value) = option.mark {
+        todo_list.mark_item(value.to_string());
         todo_list.print();
-    }
-    else if opt.delete != None {
-        todo_list.remove_item(opt.delete.unwrap().to_string());
+    } else if let Some(value) = option.delete {
+        todo_list.remove_item(value.to_string());
         todo_list.print();
-    }
-    else if opt.read != None {
-        todo_list.print_item(opt.read.unwrap().to_string());
-    } else  if opt.list != false {
+    } else if let Some(value) = option.read {
+        todo_list.print_item(value.to_string());
+    } else if option.list != false {
         todo_list.print();
     }
 
     // Save the list before exiting
     // (only on list-modifying actions)
-    if opt.add != None || opt.mark != None || opt.delete != None {
-        todo_list.save(opt.global).unwrap();
+    if option.add != None || option.mark != None || option.delete != None {
+        todo_list.save(option.global).unwrap();
     }
 }
