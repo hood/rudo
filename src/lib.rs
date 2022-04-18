@@ -54,7 +54,7 @@ pub struct TodoList {
 impl TodoList {
     // Return an empty todolist
     pub fn create() -> TodoList {
-        return TodoList { list: vec![] };
+        TodoList { list: vec![] }
     }
 
     // Check for the existence of a
@@ -149,9 +149,7 @@ impl TodoList {
 
     // Print the elments of the todolist
     pub fn print(&self) {
-        if self.list.is_empty() {
-            ()
-        }
+        if self.list.is_empty() { return }
 
         for (i, todo) in self.list.iter().enumerate() {
             let state: &str = if todo.completed { "x" } else { " " };
@@ -168,7 +166,7 @@ impl TodoList {
         let completed_items: u32 = self.list.iter().filter(|todo| todo.completed).count() as u32;
         let completion_status: f32 = (completed_items as f32 / items as f32) * 100f32;
 
-        println!("");
+        println!();
         println!("{} of {} tasks completed", completed_items, items);
 
         println!("Completion status: {}%", completion_status as u32);

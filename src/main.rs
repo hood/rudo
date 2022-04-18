@@ -25,10 +25,7 @@ struct Opt {
 }
 
 fn main() {
-    // Instantiate the todo list and
-    // initialize it
-    let mut todo_list: TodoList;
-    todo_list = TodoList::create();
+    let mut todo_list: TodoList = TodoList::create();
 
     let option = Opt::from_args();
 
@@ -45,12 +42,11 @@ fn main() {
         todo_list.print();
     } else if let Some(value) = option.read {
         todo_list.print_item(value.to_string());
-    } else if option.list != false {
+    } else if option.list {
         todo_list.print();
     }
 
-    // Save the list before exiting
-    // (only on list-modifying actions)
+    // Save the list before exiting (only on list-modifying actions).
     if option.add != None || option.mark != None || option.delete != None {
         todo_list.save(option.global).unwrap();
     }
